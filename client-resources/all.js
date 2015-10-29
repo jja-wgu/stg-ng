@@ -312,11 +312,16 @@ maxFrac:2,minFrac:2,minInt:1,negPre:"-\u00a4",negSuf:"",posPre:"\u00a4",posSuf:"
 	angular.module('filmstrip').directive('filmstrip', filmstrip);
 	
 	function filmstrip() {
+		var selectedAboveTemplate = '<div ng-transclude></div>',
+			selectedSideTemplate = '',
+			selectedBelowTemplate = '';
 		var directive = {
 			restrict: 'E',
-			scope: {},
+			scope: {
+				selectionLocation: '@'
+			},
 			// templateUrl: 'app/modules/filmstrip/partials/filmstripTemplate.html',
-			template: '<div><figure class="filmstrip__figure" data-ng-click="filmstripController.updateSelected(image.url)" data-ng-repeat="image in filmstripController.images"><img data-ng-src="{{image.url}}"><figcaption>{{image.caption}}</figcaption></figure></div>',
+			template: selectedAboveTemplate + selectedSideTemplate + '<div><figure class="filmstrip__figure" ng-click="filmstripController.updateSelected(image.url)" ng-repeat="image in filmstripController.images"><img ng-src="{{image.url}}"><figcaption>{{image.caption}}</figcaption></figure></div>' + selectedBelowTemplate,
 			transclude: true,
 			controllerAs: 'filmstripController',
 			controller: ['filmstripFactory', filmstripController],
@@ -336,14 +341,16 @@ maxFrac:2,minFrac:2,minInt:1,negPre:"-\u00a4",negSuf:"",posPre:"\u00a4",posSuf:"
 	function linkFunction() {}
 })();
 (function () {
-	angular.module('filmstrip').directive('filmstripSelection', filmstripSelection);
+	angular.module('filmstrip').directive('filmstripSelection', ['filmstripController', filmstripSelection]);
 	
 	function filmstripSelection() {
 		var directive = {
 			restrict: 'E',
 			scope: {},
-			template: '<div>Filmstrip Selection</div>',
-			link: linkFunction
+			template: '<figure class="filmstrip__selected-image"><img data-ng-src=""></figure>',
+			link: linkFunction,
+			controllerAs: 'filmstripController',
+			controller: ['filmstripFactory', filmstripController]
 		};
 		
 		return directive;
