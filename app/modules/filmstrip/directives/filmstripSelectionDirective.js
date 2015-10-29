@@ -1,18 +1,26 @@
 (function () {
-	angular.module('filmstrip').directive('filmstripSelection', ['filmstripController', filmstripSelection]);
+	// angular.module('filmstrip').directive('filmstripSelection', ['filmstripController', filmstripSelection]);
+	angular.module('filmstrip').directive('filmstripSelection', ['filmstripController',filmstripSelection]);
 	
-	function filmstripSelection() {
+	function filmstripSelection(filmstripController) {
 		var directive = {
 			restrict: 'E',
-			scope: {},
+			scope: {
+				selectedImage: '='
+			},
+			controllerAs: 'filmstripController',
+			controller: ['$scope', 'filmstripFactory', filmstripController],
+			bindToController: true,
 			template: '<figure class="filmstrip__selected-image"><img data-ng-src=""></figure>',
 			link: linkFunction,
-			controllerAs: 'filmstripController',
-			controller: ['filmstripFactory', filmstripController]
+			// require: '^filmstrip'
 		};
 		
 		return directive;
 	}
 	
-	function linkFunction() {}
+	function linkFunction(scope, element, attrs, controller) {
+		console.log('controller:', controller);
+		var image = controller.currentImage;
+	}
 })();
